@@ -13,7 +13,7 @@ const mpsTracker = document.querySelector('#mps'); // money per second
 const mpcTracker = document.querySelector('#mpc'); // money per click
 const upgradesTracker = document.querySelector('#upgrades');
 const upgradeList = document.querySelector('#upgradelist');
-const soulTracker = document.querySelector('#soulsIfRebirth')
+const soulsRebirthTracker = document.querySelector('#soulsIfRebirth')
 const soulsTracker = document.querySelector('#souls')
 const msgbox = document.querySelector('#msgbox');
 const audioAchievement = document.querySelector('#swoosh');
@@ -30,7 +30,9 @@ let moneyPerClick = 1;
 let moneyPerSecond = 0;
 let acquiredUpgrades = 0;
 let souls = 0;
+let soulsIfRebirth = 0;
 let last = 0;
+let doubleClick = 0;
 let numberOfClicks = 0; // hur många gånger har spelare eg. klickat
 let active = false; // exempel för att visa att du kan lägga till klass för att indikera att spelare får valuta
 
@@ -75,7 +77,7 @@ clickerButton.addEventListener(
     'click',
     () => {
         // vid click öka score med moneyPerClick
-        money += moneyPerClick * (1+(souls/100));
+        money += (moneyPerClick * (1 + (souls / 100)) * Math.pow(2, doubleClick));
         // håll koll på hur många gånger spelaren klickat
         numberOfClicks += 1;
         // console.log(clicker.score);
@@ -94,14 +96,14 @@ clickerButton.addEventListener(
  */
 function step(timestamp) {
     moneyTracker.textContent = Math.round(money);
-    mpsTracker.textContent = moneyPerSecond * (1+(souls/100));
-    mpcTracker.textContent = moneyPerClick * (1+(souls/100));
+    mpsTracker.textContent = moneyPerSecond * (1 + (souls / 100));
+    mpcTracker.textContent = (moneyPerClick * (1 + (souls / 100)) * Math.pow(2, doubleClick));
     upgradesTracker.textContent = acquiredUpgrades;
-    soulTracker.textContent = math.round(money/100000)
     soulsTracker.textContent = souls;
+    soulsRebirthTracker.textContent = Math.floor(money / 100000)
 
     if (timestamp >= last + 1000) {
-        money += moneyPerSecond;
+        money += moneyPerSecond * (1 + (souls / 100));
         last = timestamp;
     }
 
@@ -153,12 +155,17 @@ function step(timestamp) {
  * Efter det så kallas requestAnimationFrame och spelet är igång.
  */
 window.addEventListener('load', (event) => {
-    upgrades.forEach((upgrade) => {
-        upgradeList.appendChild(createCard(upgrade));
-    });
+    createUpgrades();
     window.requestAnimationFrame(step);
 });
 
+
+const createUpgrades = () => {
+    upgradeList.innerHTML = "";
+    upgrades.forEach((upgrade) => {
+        upgradeList.appendChild(createCard(upgrade));
+    });
+}
 /* En array med upgrades. Varje upgrade är ett objekt med egenskaperna name, cost
  * och amount. Önskar du ytterligare text eller en bild så går det utmärkt att
  * lägga till detta.
@@ -171,32 +178,55 @@ upgrades = [
         name: 'Sharpen sword',
         cost: 10,
         clicks: 1,
+        ogCost: 10,
     },
     {
         name: 'Bow',
-        cost: 50,
-        amount: 1,
+        cost: 69,
+        amount: 2,
+        ogCost: 69,
     },
     {
         name: 'Arrows',
-        cost: 500,
-        amount: 10,
-    },
-    {
-        name: 'Upgrade weapons',
-        cost: 1000,
-        clicks: 10,
+        cost: 420,
+        amount: 9,
+        ogCost: 420,
     },
     {
         name: 'Party member',
         cost: 1000,
         amount: 100,
+        ogCost: 1000,
+    },
+    {
+        name: 'Upgrade weapons',
+        cost: 1337,
+        clicks: 15,
+        ogCost: 1337,
+    },
+    {
+        name: 'Combat Training',
+        cost: 5000,
+        doubleClick: 1,
+        ogCost: 5000,
+    },
+    {
+        name: 'Organised party',
+        cost: 9999.99,
+        amount: 1000,
+        ogCost: 9999,
+    },
+    {
+        name: 'Lern magic',
+        cost: 69420,
+        clicks: 1000,
+        ogCost: 69420,
     },
     {
         name: 'Rebirth',
         cost: 100000,
         souls: 1,
-    },
+    }
 ];
 
 /* createCard är en funktion som tar ett upgrade objekt som parameter och skapar
@@ -224,32 +254,46 @@ function createCard(upgrade) {
     header.classList.add('title');
     const cost = document.createElement('p');
     if (upgrade.amount) {
-        header.textContent = `${upgrade.name}, +${upgrade.amount} per sekund.`;
-    } else if (upgrade.souls){
+        header.textContent = `${upgrade.name}, +${upgrade.amount} Septims per sekund.`;
+    } else if (upgrade.souls) {
         header.textContent = `${upgrade.name},  Start over. `;
+    } else if (upgrade.doubleClick) {
+        header.textContent = `${upgrade.name}, 2x Septims per click. `;
     } else {
-        header.textContent = `${upgrade.name}, +${upgrade.clicks} per klick.`;
+        header.textContent = `${upgrade.name}, +${upgrade.clicks} Septims per klick.`;
     }
     cost.textContent = `Köp för ${upgrade.cost} Septims.`;
 
     card.addEventListener('click', (e) => {
         if (money >= upgrade.cost) {
-            if (upgrade.souls >0){
+            if (upgrade.souls) {
                 moneyPerClick = 1;
                 moneyPerSecond = 0;
-                souls += Math.floor(money/100000)
+                doubleClick = 0;
+                message('Grattis du har rebirthat', 'success');
+                souls += Math.floor(money / 100000)
                 money = 0;
-                // Need to make so I can acualy reset the game.
-
+                for (let i = 0; i < upgrades.length - 1; i++) {
+                    upgrades[i].cost = upgrades[i].ogCost;
+                }
+                createUpgrades();
             }
-            else{
-            acquiredUpgrades++;
-            money -= upgrade.cost;
-            upgrade.cost *= 1.3;
-            cost.textContent = 'Köp för ' + upgrade.cost + ' benbitar';
-            moneyPerSecond += upgrade.amount ? upgrade.amount : 0;
-            moneyPerClick += upgrade.clicks ? upgrade.clicks : 0;
-            message('Grattis du har köpt en uppgradering!', 'success');
+            else if (upgrade.doubleClick) {
+                acquiredUpgrades++;
+                money -= upgrade.cost;
+                upgrade.cost *= 20;
+                cost.textContent = 'Köp för ' + upgrade.cost + ' Septim';
+                doubleClick += 1;
+                message('Grattis du har köpt en uppgradering!', 'success');
+            }
+            else {
+                acquiredUpgrades++;
+                money -= upgrade.cost;
+                upgrade.cost *= 1.3;
+                cost.textContent = 'Köp för ' + upgrade.cost + ' Septim';
+                moneyPerSecond += upgrade.amount ? upgrade.amount : 0;
+                moneyPerClick += upgrade.clicks ? upgrade.clicks : 0;
+                message('Grattis du har köpt en uppgradering!', 'success');
             }
         } else {
             message('Du har inte råd.', 'warning');
