@@ -9,3 +9,7 @@
 * Man kan specifikt dubbla mängden pengar känat per klick. 
 * Tillgagt lämpliga uppgraderingar. 
 * Behöver göra visual design för min clicker. 
+
+# 2023-03-22
+* Har lagt till en tidsbaserade effekt som dubblar alla pengargenerering.
+* Gjort så att alla desplays kan visa att efekten är aktiv.

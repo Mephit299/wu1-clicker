@@ -32,6 +32,7 @@ let acquiredUpgrades = 0;
 let souls = 0;
 let soulsIfRebirth = 0;
 let last = 0;
+let duration = 0;
 let doubleClick = 0;
 let numberOfClicks = 0; // hur många gånger har spelare eg. klickat
 let active = false; // exempel för att visa att du kan lägga till klass för att indikera att spelare får valuta
@@ -77,7 +78,10 @@ clickerButton.addEventListener(
     'click',
     () => {
         // vid click öka score med moneyPerClick
-        money += (moneyPerClick * (1 + (souls / 100)) * Math.pow(2, doubleClick));
+        if (duration > 0){
+            money += (moneyPerClick * (1 + (souls / 100)) * 2 * Math.pow(2, doubleClick));
+        }else{ money += (moneyPerClick * (1 + (souls / 100)) * Math.pow(2, doubleClick));}
+
         // håll koll på hur många gånger spelaren klickat
         numberOfClicks += 1;
         // console.log(clicker.score);
@@ -96,20 +100,35 @@ clickerButton.addEventListener(
  */
 function step(timestamp) {
     moneyTracker.textContent = Math.round(money);
-    mpsTracker.textContent = moneyPerSecond * (1 + (souls / 100));
-    mpcTracker.textContent = (moneyPerClick * (1 + (souls / 100)) * Math.pow(2, doubleClick));
+    if (duration > 0) {
+        mpsTracker.textContent = moneyPerSecond * (1 + (souls / 100)) * 2;
+    }else{
+        mpsTracker.textContent = moneyPerSecond * (1 + (souls / 100));
+    }
+    if (duration > 0) {mpcTracker.textContent = (moneyPerClick * (1 + (souls / 100)) * 2 * Math.pow(2, doubleClick));
+    }else{
+        mpcTracker.textContent = (moneyPerClick * (1 + (souls / 100)) * Math.pow(2, doubleClick));
+    }
     upgradesTracker.textContent = acquiredUpgrades;
     soulsTracker.textContent = souls;
     soulsRebirthTracker.textContent = Math.floor(money / 100000)
 
     if (timestamp >= last + 1000) {
-        money += moneyPerSecond * (1 + (souls / 100));
+        if (duration > 0) {
+            money += moneyPerSecond * (1 + (souls / 100)) * 2;
+        }
+        else{
+            money += moneyPerSecond * (1 + (souls / 100));
+        }
         last = timestamp;
     }
 
     if (moneyPerSecond > 0 && !active) {
         mpsTracker.classList.add('active');
         active = true;
+    }
+    if (duration != 0){
+        duration--;
     }
 
     // achievements, utgår från arrayen achievements med objekt
@@ -175,7 +194,7 @@ const createUpgrades = () => {
  */
 upgrades = [
     {
-        name: 'Sharpen sword',
+        name: 'Sharpen Sword',
         cost: 10,
         clicks: 1,
         ogCost: 10,
@@ -193,16 +212,22 @@ upgrades = [
         ogCost: 420,
     },
     {
-        name: 'Party member',
+        name: 'Party Member',
         cost: 1000,
         amount: 100,
         ogCost: 1000,
     },
     {
-        name: 'Upgrade weapons',
+        name: 'Upgrade Weapons',
         cost: 1337,
         clicks: 15,
         ogCost: 1337,
+    },
+    {
+        name: 'Guild Influece',
+        cost: 2500,
+        duration: 900,
+        ogCost: 2500,
     },
     {
         name: 'Combat Training',
@@ -211,13 +236,13 @@ upgrades = [
         ogCost: 5000,
     },
     {
-        name: 'Organised party',
+        name: 'Organised Party',
         cost: 9999.99,
         amount: 1000,
         ogCost: 9999,
     },
     {
-        name: 'Lern magic',
+        name: 'Lern Magic',
         cost: 69420,
         clicks: 1000,
         ogCost: 69420,
@@ -259,6 +284,8 @@ function createCard(upgrade) {
         header.textContent = `${upgrade.name},  Start over. `;
     } else if (upgrade.doubleClick) {
         header.textContent = `${upgrade.name}, 2x Septims per click. `;
+    } else if (upgrade.duration) {
+        header.textContent = `${upgrade.name}, 2x Septims generering. `;
     } else {
         header.textContent = `${upgrade.name}, +${upgrade.clicks} Septims per klick.`;
     }
@@ -293,6 +320,7 @@ function createCard(upgrade) {
                 cost.textContent = 'Köp för ' + upgrade.cost + ' Septim';
                 moneyPerSecond += upgrade.amount ? upgrade.amount : 0;
                 moneyPerClick += upgrade.clicks ? upgrade.clicks : 0;
+                duration += upgrade.duration ? upgrade.duration : 0;
                 message('Grattis du har köpt en uppgradering!', 'success');
             }
         } else {
