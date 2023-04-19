@@ -1,15 +1,47 @@
-# Dockumentation
-* Jag kommer inte skriva så mycket idag men jag har förökt att förstå och ändra i koden
-* Mina trackers fungerar inte längre.
+# Clicker
+Levi Högdal 2023-04-19
 
-# 2023-03-22
-* Har kollat igenom koden välldigt bra och lärt mäg vad den gör.
-* Har lagt till kod som gör att det finns en rebirth fungtion som återställer mästadels av spelet och ger en generel pengarökning till alla inkomstkällor.
-* Har faktiskt gjor så att upgraderingaran heter spesifika saker och skrivit om så att det står i uppgraderingarna som jag vill.
-* Man kan specifikt dubbla mängden pengar känat per klick. 
-* Tillgagt lämpliga uppgraderingar. 
-* Behöver göra visual design för min clicker. 
+## Inledning
+Poängen med projektet är att lära sig om Javasckript. 
+Man får en mall för allting men det är mest genom att ändra och förstå hur javascript som saker ändras. 
+Så arbetet går ut på att förstå och ändra Javascript för att få nya resultat.
+För att göra så att hemsidan ser bra ut kommer lite förändring på html och css också behövas men det är inte det svåra i uppgiften.
 
-# 2023-03-22
-* Har lagt till en tidsbaserade effekt som dubblar alla pengargenerering.
-* Gjort så att alla desplays kan visa att efekten är aktiv.
+### Genomförande
+Arbetet började med att jag läste igenom javascript dockumentet.
+Jag förstog inte så mycket av att läsa igenom det utan att ändra något men jag fick en ide om var jag skulle börja.
+
+Genom att bara ändra en sak i taget i Javascript dockumentet försod jag tillsist hur allting interagerade med varandra för att kunna frit skriva och ändra i det dockumentet utan risk för att allting skulle sluta fungera.
+
+När jag var mot klar med javascripten ändrade jag lite i html och css för att få det vara samanhängande med temat för procjektet.
+
+## Bakgrund
+
+
+Redovisa arbetets olika delar. Så att läsaren förstår vad du gjort och hur.
+
+Använd gärna bilder för att illustrera.
+
+För att lägga till bilder i markdown. Bilderna kan du ladda upp med Git som vanligt, länka dem med url eller filnamnet.
+
+```
+![GitHub Logo](/images/logo.png)
+Format: ![Alt Text](url)
+```
+## Positiva erfarenheter
+
+Jag har lärt mig en del om hur javascript fungerar och hur man skriver simpel javascript.
+
+Här beskriver du vad som har gått bra i ditt projekt och analyserar varför. Hur ska du upprepa framgångarna.
+
+## Negativa erfarenheter
+
+Här beskriver du det som du anser har gått mindre bra med ditt projekt och analyserar hur du kan undvika detta i framtida projekt.
+
+## Sammanfattning
+
+Här redovisar du dina slutsatser, erfarenheter och lärdomar. Reflektera över din produkt och dess/dina utvecklingsmöjligheter.
+Vad kan vidareutvecklas och finns det utrymme att bygga vidare på projektet.
+
+
+

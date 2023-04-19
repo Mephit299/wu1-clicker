@@ -226,7 +226,7 @@ upgrades = [
     {
         name: 'Guild Influece',
         cost: 2500,
-        duration: 900,
+        duration: 1500,
         ogCost: 2500,
     },
     {
@@ -242,7 +242,7 @@ upgrades = [
         ogCost: 9999,
     },
     {
-        name: 'Lern Magic',
+        name: 'Learn Magic',
         cost: 69420,
         clicks: 1000,
         ogCost: 69420,
