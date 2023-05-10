@@ -62,7 +62,7 @@ Tack [Malte](https://github.com/Mafrans) för lite ideér.
 
 {
     title: Monsterslayer
-    tagline: 
+    tagline: Dräp olika fantastiska monster.
     url: https://mephit299.github.io/wu1-clicker/
     git: https://github.com/Mephit299/wu1-clicker
     author: Levi
